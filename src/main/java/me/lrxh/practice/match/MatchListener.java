@@ -28,11 +28,16 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 
 public class MatchListener implements Listener {
+
+    private final Map<UUID, Long> lastAttackTime = new HashMap<>();
 
 
     @EventHandler
@@ -583,7 +588,23 @@ public class MatchListener implements Listener {
                     return;
                 }
 
-                attackerProfile.getMatch().getGamePlayer(attacker).handleHit();
+                long currentTime = System.currentTimeMillis();
+                UUID attackerUUID = attacker.getUniqueId();
+
+                long lastAttack = lastAttackTime.getOrDefault(attackerUUID, 0L);
+
+                long elapsedTime = currentTime - lastAttack;
+
+                // 18ティック以上経過していた場合のみhandleHitを実行
+                // kitのhitdelay x 25
+                if (elapsedTime >= 450) {
+                    if (match.getState() != MatchState.STARTING_ROUND && match.getState() != MatchState.ENDING_MATCH) {
+                        attackerProfile.getMatch().getGamePlayer(attacker).handleHit();
+                        lastAttackTime.put(attackerUUID, currentTime);
+                    }
+                }
+
+                // attackerProfile.getMatch().getGamePlayer(attacker).handleHit();
                 damagedProfile.getMatch().getGamePlayer(damaged).resetCombo();
 
                 if (match.getKit().getGameRules().isBoxing() && match.getState() != MatchState.STARTING_ROUND

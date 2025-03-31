@@ -159,6 +159,9 @@ public class BasicFreeForAllMatch extends Match {
     @Override
     public void sendEndMessage(Player player) {
         List<String> formattedStrings = new ArrayList<>(Locale.MATCH_END_DETAILS.formatLines());
+        // 処理中に削除する要素をループ前に特定する
+        List<String> stringsToRemove = new ArrayList<>();
+
         for (String string : formattedStrings) {
             if (string.equalsIgnoreCase("%INVENTORIES%")) {
                 ChatComponentBuilder winner = new ChatComponentBuilder(Locale.MATCH_END_WINNER_INVENTORY
@@ -168,14 +171,18 @@ public class BasicFreeForAllMatch extends Match {
                         getTeamAsComponent(winningParticipant));
 
             } else if (string.equalsIgnoreCase("%ENDMESSAGE%")) {
-                formattedStrings.remove(string);
+                // 削除する要素をリストに追加するだけで、まだ削除しない
+                stringsToRemove.add(string);
             } else if (string.equalsIgnoreCase("%ELO_CHANGES%")) {
-                formattedStrings.remove(string);
+                // 削除する要素をリストに追加するだけで、まだ削除しない
+                stringsToRemove.add(string);
             } else {
                 player.sendMessage(CC.translate(string));
             }
         }
-    }
+
+        // ループ終了後に安全に削除
+        formattedStrings.removeAll(stringsToRemove);
 
 //    @Override
 //    public List<BaseComponent[]> generateEndComponents(Player player) {
