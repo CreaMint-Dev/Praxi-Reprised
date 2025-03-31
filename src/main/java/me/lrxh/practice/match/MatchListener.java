@@ -161,7 +161,10 @@ public class MatchListener implements Listener {
     @EventHandler
     public void onFallDamageEvent(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            event.setCancelled(true);
+            Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
+            if (profile.getMatch() != null && !profile.getMatch().getKit().getGameRules().isNoFall()) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -703,25 +706,25 @@ public class MatchListener implements Listener {
         Profile profile = Profile.getByUuid(shooter.getUniqueId());
         Match match = profile.getMatch();
 
-        if (projectile instanceof EnderPearl) {
-            if (match.getState() != MatchState.PLAYING_ROUND) {
-                shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
-                event.setCancelled(true);
-                return;
-            }
-
-            if (!profile.isEnderpearlOnCooldown()) {
-                profile.setEnderpearlCooldown(new Cooldown(16_000));
-            } else {
-                event.setCancelled(true);
-                shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
-                String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
-                shooter.sendMessage(Locale.MATCH_ENDERPEARL_COOLDOWN.format(shooter, time,
-                        (time.equalsIgnoreCase("1.0") ? "" : "s")));
-                shooter.updateInventory();
-            }
-
-        }
+//        if (projectile instanceof EnderPearl) {
+//            if (match.getState() != MatchState.PLAYING_ROUND) {
+//                shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
+//                event.setCancelled(true);
+//                return;
+//            }
+//
+//            if (!profile.isEnderpearlOnCooldown()) {
+//                profile.setEnderpearlCooldown(new Cooldown(16_000));
+//            } else {
+//                event.setCancelled(true);
+//                shooter.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
+//                String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
+//                shooter.sendMessage(Locale.MATCH_ENDERPEARL_COOLDOWN.format(shooter, time,
+//                        (time.equalsIgnoreCase("1.0") ? "" : "s")));
+//                shooter.updateInventory();
+//            }
+//
+//        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -735,6 +738,26 @@ public class MatchListener implements Listener {
 
             if (profile.getMatch() != null) {
                 Match match = profile.getMatch();
+
+                // エンダーパールの処理を追加
+                if (itemStack.getType() == Material.ENDER_PEARL) {
+                    if (match.getState() != MatchState.PLAYING_ROUND) {
+                        event.setCancelled(true);
+                        player.sendMessage(CC.RED + "You cannot throw pearls yet!");
+                        return;
+                    }
+
+                    if (!profile.isEnderpearlOnCooldown()) {
+                        profile.setEnderpearlCooldown(new Cooldown(16_000));
+                    } else {
+                        event.setCancelled(true);
+                        String time = TimeUtil.millisToSeconds(profile.getEnderpearlCooldown().getRemaining());
+                        player.sendMessage(Locale.MATCH_ENDERPEARL_COOLDOWN.format(player, time,
+                                (time.equalsIgnoreCase("1.0") ? "" : "s")));
+                        player.updateInventory();
+                    }
+                    return;
+                }
 
                 if (Practice.getInstance().getHotbar().fromItemStack(itemStack) == HotbarItem.SPECTATE_STOP) {
                     match.onDisconnect(player);

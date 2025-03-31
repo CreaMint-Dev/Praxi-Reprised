@@ -19,6 +19,7 @@ kits:
       boxing: false
       bedwars: false
       show-health: false
+      no-fall: false
     edit-rules:
       allow-potion-fill: false
     knockback-profile: builduhc
@@ -44,6 +45,7 @@ kits:
       show-health: false
       boxing: false
       bedwars: false
+      no-fall: false
     edit-rules:
       allow-potion-fill: false
       items:
@@ -84,6 +86,7 @@ kits:
       allow-build: false
       show-health: false
       boxing: false
+      no-fall: false
     edit-rules:
       allow-potion-fill: false
     knockback-profile: sumo
@@ -105,6 +108,7 @@ kits:
       hit-delay: 20
       boxing: true
       bedwars: false
+      no-fall: false
     knockback-profile: boxing
   BuildUHC:
     enabled: true
@@ -124,6 +128,7 @@ kits:
       hit-delay: 20
       boxing: false
       bedwars: false
+      no-fall: false
     knockback-profile: builduhc
   Gapple:
     enabled: true
@@ -143,6 +148,7 @@ kits:
       health-regeneration: false
       hit-delay: 20
       boxing: false
+      no-fall: false
   Bedfight:
     enabled: true
     description:
@@ -163,3 +169,4 @@ kits:
       hit-delay: 20
       boxing: false
       show-health: false
+      no-fall: false

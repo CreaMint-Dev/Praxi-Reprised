@@ -27,8 +27,8 @@ public class KitCommand extends BaseCommand {
         player.sendMessage(CC.translate("&7* &c/kit create &7<value> - &fCreate kit"));
         player.sendMessage(CC.translate("&7* &c/kit getinv &7<kit> - &fGet kit loadout"));
         player.sendMessage(CC.translate("&7* &c/kit list &7- &fList all kits"));
-        player.sendMessage(CC.translate("&7* &c/arena setinv &7<kit> &7- &fSet kit loadout"));
-        player.sendMessage(CC.translate("&7* &c/arena setkb &7<kit> &7<kb> &7- &fSet kit KB Profile"));
+        player.sendMessage(CC.translate("&7* &c/kit setinv &7<kit> &7- &fSet kit loadout"));
+        player.sendMessage(CC.translate("&7* &c/kit setkb &7<kit> &7<kb> &7- &fSet kit KB Profile"));
         player.sendMessage(CC.translate("&7&m-----------------------------------------"));
     }
 
@@ -387,5 +387,22 @@ public class KitCommand extends BaseCommand {
         kit.save();
 
         player.sendMessage(CC.GREEN + "You updated the kit's hit delay to &f" + delay + "!");
+    }
+
+    @Subcommand("nofall")
+    @CommandCompletion("@kits")
+    @Syntax("<kit>")
+    public void nofall(Player player, String kitName) {
+        if (!Kit.getKits().contains(Kit.getByName(kitName))) {
+            player.sendMessage(CC.translate("&4ERROR - &cKit doesn't exists!"));
+            return;
+        }
+        Kit kit = Kit.getByName(kitName);
+        if (kit == null) return;
+
+        kit.getGameRules().setNoFall(!kit.getGameRules().isNoFall());
+        kit.save();
+
+        player.sendMessage(CC.GREEN + "You updated the kit's no fall status to " + (kit.getGameRules().isShowHealth() ? "Enabled" : ChatColor.RED + "Disabled" + "."));
     }
 }
