@@ -131,6 +131,7 @@ public class Kit {
         configFile.getConfiguration().set(path + ".game-rules.show-health", gameRules.isShowHealth());
         configFile.getConfiguration().set(path + ".game-rules.hit-delay", gameRules.getHitDelay());
         configFile.getConfiguration().set(path + ".game-rules.boxing", gameRules.isBoxing());
+        configFile.getConfiguration().set(path + ".game-rules.no-fall", gameRules.isNoFall());
 
         if (knockbackProfile != null) {
             configFile.getConfiguration().set(path + ".knockback-profile", knockbackProfile);

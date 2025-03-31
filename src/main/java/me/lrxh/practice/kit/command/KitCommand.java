@@ -69,6 +69,7 @@ public class KitCommand extends BaseCommand {
         player.sendMessage(CC.translate("&7* &c/kit hitdelay &7<kit> <value> - &fSet hit delay"));
         player.sendMessage(CC.translate("&7* &c/kit boxing &7<kit> - &fAdd Boxing rule"));
         player.sendMessage(CC.translate("&7* &c/kit bedwars &7<kit> - &fAdd Bedwars rule"));
+        player.sendMessage(CC.translate("&7* &c/kit nofall &7<kit> - &fSet NoFall rule"));
         player.sendMessage(CC.translate("&7&m-----------------------------------------"));
     }
 
@@ -403,6 +404,6 @@ public class KitCommand extends BaseCommand {
         kit.getGameRules().setNoFall(!kit.getGameRules().isNoFall());
         kit.save();
 
-        player.sendMessage(CC.GREEN + "You updated the kit's no fall status to " + (kit.getGameRules().isShowHealth() ? "Enabled" : ChatColor.RED + "Disabled" + "."));
+        player.sendMessage(CC.GREEN + "You updated the kit's no fall status to " + (kit.getGameRules().isNoFall() ? "Enabled" : ChatColor.RED + "Disabled" + "."));
     }
 }

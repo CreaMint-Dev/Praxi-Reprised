@@ -162,8 +162,19 @@ public class MatchListener implements Listener {
     public void onFallDamageEvent(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             Profile profile = Profile.getByUuid(event.getEntity().getUniqueId());
-            if (profile.getMatch() != null && !profile.getMatch().getKit().getGameRules().isNoFall()) {
+            if (profile.getMatch() != null && profile.getMatch().getKit().getGameRules().isNoFall()) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            Profile profile = Profile.getByUuid(event.getPlayer().getUniqueId());
+            if (profile.getMatch() != null && !profile.getMatch().getKit().getGameRules().isNoFall()) {
+                Player player = event.getPlayer();
+                player.damage(0.0);
             }
         }
     }
